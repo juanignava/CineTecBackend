@@ -45,7 +45,12 @@ This repo corresponds to the backend of the backend of the first project of the 
       "Vin Diesel", "John Cena"
       ],
   "director": "Universal",
-  "category": "action"
+  "category": "action",
+  "proyections": [
+    {
+    Proyection JSON*
+    }
+    ]
 }
 ```
 
@@ -79,6 +84,25 @@ Updates the information from a client in the databse. If the client doesn't exis
 ### Movie Requests
 
 ###### POST movie
+
+Add a new movie, where the id is the key attribute. If theres already a movie with the respective id there will be an 403 error (Forbidden). This is a POST request with this url `http://localhost:5000/movie` the body to include corresponds to the one of the movies.
+
+###### GET movies
+
+Get all the movies saved in the database. This is a GET request with this url `http://localhost:5000/movie` the body aswered has the form of the client JSON body.
+
+###### GET movie by id
+
+Get an specific movie based on the id. If the movie doesn't exists then a not found error will be answered. This is a GET request with this url `http://localhost:5000/movie/#` where `#` represents the movie of the request. the body aswered has the form of the movie JSON body.
+
+
+###### DELETE movie
+
+Deletes a movie from the database. If the movie doesn't exists then a not found error (404) will be answered. This is a DELETE request with this url `http://localhost:5000/movie/#` where `#` represents the id of the request. This request has no answer.
+
+###### PUT movie
+
+Updates the information from a movie in the databse. If the movie doesn't exists then a not found error (404) will be answered. This is a PUT request with this url `http://localhost:5000/movie/#` where `#` represents the id of the request. The body of this requests is the one specified for the movie.
 
 ### Cinema Requests
 
