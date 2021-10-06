@@ -1,8 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using System.Threading;
-using System.Threading.Tasks;
 
 #nullable disable
 
@@ -18,8 +16,6 @@ namespace CineTecBackend
             : base(options)
         {
         }
-
-        //public void SaveChangesAsync(CancellationToken cancellationToken = default);
 
         public virtual DbSet<Actor> Actors { get; set; }
         public virtual DbSet<Cinema> Cinemas { get; set; }
@@ -112,6 +108,10 @@ namespace CineTecBackend
                 entity.Property(e => e.LastName)
                     .HasMaxLength(10)
                     .HasColumnName("last_name");
+
+                entity.Property(e => e.Password)
+                    .HasMaxLength(20)
+                    .HasColumnName("password");
 
                 entity.Property(e => e.PhoneNumber)
                     .HasMaxLength(10)

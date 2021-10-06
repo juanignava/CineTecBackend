@@ -18,6 +18,7 @@ namespace CineTecBackend.Controllers
             _context = context;
         }
 
+        // Get all clients
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Client>>> GetClients()
         {
@@ -25,6 +26,7 @@ namespace CineTecBackend.Controllers
 
         }
 
+        // Get a client by id
         [HttpGet("{id}")]
         public async Task<ActionResult<Client>> GetClient(int id)
         {
@@ -32,10 +34,42 @@ namespace CineTecBackend.Controllers
 
         }
 
+        // Post a client
         [HttpPost]
         public async Task<ActionResult> Add(Client client)
         {
             _context.Clients.Add(client);
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+        // Update a client
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateClient(int id, Client client)
+        {
+            var itemToUpdate = await _context.Clients.FindAsync(id);
+            if (itemToUpdate == null)
+                return NotFound();
+            itemToUpdate.FirstName = client.FirstName;
+            itemToUpdate.LastName = client.LastName;
+            itemToUpdate.SecLastName = client.SecLastName;
+            itemToUpdate.Age = client.Age;
+            itemToUpdate.PhoneNumber = client.PhoneNumber;
+            itemToUpdate.Password = client.Password;
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+        // Delete a client
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteClient(int id)
+        {
+            var itemToRemove = await _context.Clients.FindAsync(id);
+
+            if (itemToRemove == null)
+                return NotFound();
+
+            _context.Clients.Remove(itemToRemove);
             await _context.SaveChangesAsync();
             return Ok();
         }

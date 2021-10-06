@@ -1,6 +1,5 @@
-INSERT INTO CLIENT (ID, First_name, Last_name, Sec_last_name, Age, Birth_date, Phone_number)
-    VALUES  (1234, 'Juan', 'Navarro', 'Navarro', '20', '2001-02-08', '87175508'),
-            (1123, 'Marco', 'Rivera', 'Meneses', '30', '1991-02-08', '87175500');
+INSERT INTO CLIENT (ID, First_name, Last_name, Sec_last_name, Age, Birth_date, Phone_number, Password)
+    VALUES  (1, 'Juan', 'Navarro', 'Navarro', '20', '2001-02-08', '87175508', 'password');
 
 SELECT
     *
