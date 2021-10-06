@@ -33,6 +33,40 @@ namespace CineTecBackend.Controllers
 
         }
 
+        /*
+        // Get movies per theater
+        [HttpGet("filter_theater/{name}")]
+        public async Task<ActionResult<IEnumerable<Screening>>> GetMoviesPerTheater(string name)
+        {
+            var cinemaList = await _context.Cinemas.Where(p => p.NameMovieTheater == name).ToListAsync();
+
+            List<int> numberProperty = cinemaList.Select(o => o.Number).ToList();
+
+            var screeningList = await _context.Screenings.Where(p => numberProperty.Contains(p.CinemaNumber)).ToListAsync();
+            return screeningList;
+            /*
+            return _context.Cinemas.Join(
+                    _context.MovieTheaters,
+                    cinema => cinema.NameMovieTheater,
+                    movie_theater => movie_theater.Name,
+                    (cinema, movie_theater) => new
+                    {
+                        cinema_num = cinema.Number,
+                        movie_theater = movie_theater.Name
+                    }
+                    ).ToList();
+
+            /*
+            List<Screening> completeList = new List<Screening> ();
+            foreach (Cinema cinema in cinemaList){
+                var screen = await _context.Screenings.Where(p => p.CinemaNumber == cinema.Number).ToListAsync();;
+                completeList.AddRange(screen);
+            }
+            return completeList;
+            
+        }
+        */
+
         // Post a screening
         [HttpPost]
         public async Task<ActionResult> Add(Screening screening)
