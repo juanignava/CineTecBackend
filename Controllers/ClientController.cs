@@ -38,6 +38,9 @@ namespace CineTecBackend.Controllers
         [HttpPost]
         public async Task<ActionResult> Add(Client client)
         {
+            var itemToAdd = await _context.Clients.FindAsync(client.Id);
+            if (itemToAdd != null)
+                return Conflict();
             _context.Clients.Add(client);
             await _context.SaveChangesAsync();
             return Ok();
