@@ -26,10 +26,12 @@ from
     CINEMA
 
 INSERT INTO MOVIE (Original_name, Gendre, Director, Lenght)
-    VALUES ('Titanic', 'Suspense', 'Cameron', 180);
-
+    VALUES ('Titanic', 'Suspense', 'Cameron', 180),
+           ('Minions', 'Comedy', 'Steven', 120);
 
 SELECT
     *
 from 
     MOVIE
+
+

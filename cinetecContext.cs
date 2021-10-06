@@ -71,8 +71,6 @@ namespace CineTecBackend
                     .ValueGeneratedNever()
                     .HasColumnName("number");
 
-                entity.Property(e => e.Capacity).HasColumnName("capacity");
-
                 entity.Property(e => e.Columns).HasColumnName("columns");
 
                 entity.Property(e => e.NameMovieTheater)
@@ -168,40 +166,41 @@ namespace CineTecBackend
 
             modelBuilder.Entity<Screening>(entity =>
             {
-                entity.HasKey(e => new { e.CinemaNumber, e.MovieOriginalName, e.Hour })
-                    .HasName("screening_pkey");
-
                 entity.ToTable("screening");
 
+                entity.Property(e => e.Id)
+                    .ValueGeneratedNever()
+                    .HasColumnName("id");
+
+                entity.Property(e => e.Capacity).HasColumnName("capacity");
+
                 entity.Property(e => e.CinemaNumber).HasColumnName("cinema_number");
+
+                entity.Property(e => e.Hour).HasColumnName("hour");
 
                 entity.Property(e => e.MovieOriginalName)
                     .HasMaxLength(10)
                     .HasColumnName("movie_original_name");
 
-                entity.Property(e => e.Hour).HasColumnName("hour");
-
                 entity.HasOne(d => d.CinemaNumberNavigation)
                     .WithMany(p => p.Screenings)
                     .HasForeignKey(d => d.CinemaNumber)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("screening_cinema_fk");
 
                 entity.HasOne(d => d.MovieOriginalNameNavigation)
                     .WithMany(p => p.Screenings)
                     .HasForeignKey(d => d.MovieOriginalName)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("screening_movie_fk");
             });
 
             modelBuilder.Entity<Seat>(entity =>
             {
-                entity.HasKey(e => new { e.CinemaNumber, e.RowNum, e.ColumnNum })
+                entity.HasKey(e => new { e.ScreeningId, e.RowNum, e.ColumnNum })
                     .HasName("seat_pkey");
 
                 entity.ToTable("seat");
 
-                entity.Property(e => e.CinemaNumber).HasColumnName("cinema_number");
+                entity.Property(e => e.ScreeningId).HasColumnName("screening_id");
 
                 entity.Property(e => e.RowNum).HasColumnName("row_num");
 
@@ -211,9 +210,9 @@ namespace CineTecBackend
                     .HasMaxLength(10)
                     .HasColumnName("state");
 
-                entity.HasOne(d => d.CinemaNumberNavigation)
+                entity.HasOne(d => d.Screening)
                     .WithMany(p => p.Seats)
-                    .HasForeignKey(d => d.CinemaNumber)
+                    .HasForeignKey(d => d.ScreeningId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("seat_cinema_fk");
             });

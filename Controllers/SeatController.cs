@@ -21,15 +21,15 @@ namespace CineTecBackend.Controllers
         [HttpGet("{number}")]
         public async Task<IEnumerable<Seat>> GetSeats(int number)
         {
-            return await _context.Seats.Where(p => p.CinemaNumber == number).ToListAsync();;
+            return await _context.Seats.Where(p => p.ScreeningId == number).ToListAsync();;
         }
 
         // Post a seat
         [HttpPost]
         public async Task<ActionResult> Add(Seat seat)
         {
-            var itemToAdd = await _context.Seats.FirstOrDefaultAsync(p => p.CinemaNumber == seat.CinemaNumber && p.RowNum == seat.RowNum && p.ColumnNum == seat.ColumnNum);
-            var itemToAddCinema = await _context.Cinemas.FindAsync(seat.CinemaNumber);
+            var itemToAdd = await _context.Seats.FirstOrDefaultAsync(p => p.ScreeningId == seat.ScreeningId && p.RowNum == seat.RowNum && p.ColumnNum == seat.ColumnNum);
+            var itemToAddCinema = await _context.Cinemas.FindAsync(seat.ScreeningId);
             if (itemToAdd != null || itemToAddCinema == null)
                 return Conflict();
             _context.Seats.Add(seat);
@@ -41,11 +41,11 @@ namespace CineTecBackend.Controllers
         [HttpPut("{number}/{row_num}/{column_num}")]
         public async Task<ActionResult> UpdateCinema(int number, int row_num, int column_num, Seat seat)
         {
-            var itemToUpdate = await _context.Seats.FirstOrDefaultAsync(p => p.CinemaNumber == number && p.RowNum == row_num && p.ColumnNum == column_num);
+            var itemToUpdate = await _context.Seats.FirstOrDefaultAsync(p => p.ScreeningId == number && p.RowNum == row_num && p.ColumnNum == column_num);
             if (itemToUpdate == null)
                 return NotFound();
 
-            var itemToAddCinema = await _context.Cinemas.FindAsync(seat.CinemaNumber);
+            var itemToAddCinema = await _context.Cinemas.FindAsync(seat.ScreeningId);
             if (itemToAddCinema == null)
                 return Conflict();
             

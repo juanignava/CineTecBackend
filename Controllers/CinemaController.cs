@@ -46,23 +46,6 @@ namespace CineTecBackend.Controllers
             _context.Cinemas.Add(cinema);
             await _context.SaveChangesAsync();
 
-            for (int i = 1; i <= cinema.Rows; i++)
-            {
-                for (int j = 1; j <= cinema.Columns; j++)   {
-                    
-                    Seat seat = new ()
-                    {
-                        CinemaNumber = cinema.Number,
-                        RowNum = i,
-                        ColumnNum = j,
-                        State = "free"
-                    };
-
-                    _context.Seats.Add(seat);
-                    await _context.SaveChangesAsync();
-                }
-            }
-
             return Ok();
         }
 
@@ -80,7 +63,6 @@ namespace CineTecBackend.Controllers
             
             itemToUpdate.Rows = cinema.Rows;
             itemToUpdate.Columns = cinema.Columns;
-            itemToUpdate.Capacity = cinema.Capacity;
 
             await _context.SaveChangesAsync();
             return Ok();

@@ -36,10 +36,11 @@ CREATE TABLE MOVIE
 
 CREATE TABLE SCREENING
 (
+    ID                  INT PRIMARY KEY,
     Cinema_number       INT,
     Movie_original_name VARCHAR(10),
     Hour                INT,
-    PRIMARY KEY (Cinema_number, Movie_original_name, Hour)
+    Capacity            INT
 );
 
 CREATE TABLE ACTORS
