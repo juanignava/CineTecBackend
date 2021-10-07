@@ -33,39 +33,20 @@ namespace CineTecBackend.Controllers
 
         }
 
-        /*
-        // Get movies per theater
-        [HttpGet("filter_theater/{name}")]
-        public async Task<ActionResult<IEnumerable<Screening>>> GetMoviesPerTheater(string name)
+        
+        // Get screening per theater per movie
+        [HttpGet("filter_screening{theater_name}/{movie_name}")]
+        public async Task<ActionResult<IEnumerable<Screening>>> GetScreeningPerTheater(string theater_name, string movie_name)
         {
-            var cinemaList = await _context.Cinemas.Where(p => p.NameMovieTheater == name).ToListAsync();
 
-            List<int> numberProperty = cinemaList.Select(o => o.Number).ToList();
-
-            var screeningList = await _context.Screenings.Where(p => numberProperty.Contains(p.CinemaNumber)).ToListAsync();
-            return screeningList;
-            /*
-            return _context.Cinemas.Join(
-                    _context.MovieTheaters,
-                    cinema => cinema.NameMovieTheater,
-                    movie_theater => movie_theater.Name,
-                    (cinema, movie_theater) => new
-                    {
-                        cinema_num = cinema.Number,
-                        movie_theater = movie_theater.Name
-                    }
-                    ).ToList();
-
-            /*
-            List<Screening> completeList = new List<Screening> ();
-            foreach (Cinema cinema in cinemaList){
-                var screen = await _context.Screenings.Where(p => p.CinemaNumber == cinema.Number).ToListAsync();;
-                completeList.AddRange(screen);
-            }
-            return completeList;
+            var screeningList = await _context.Screenings.FromSqlInterpolated($@"SELECT SC.ID, SC.Cinema_number, SC.Movie_original_name, SC.Hour, SC.Capacity 
+                                                                            FROM SCREENING AS SC, CINEMA AS C, MOVIE_THEATER AS MT 
+                                                                            WHERE SC.Cinema_number = C.Number AND C.Name_movie_theater = MT.Name 
+                                                                            AND MT.Name = {theater_name} AND SC.Movie_original_name = {movie_name}").ToListAsync();
             
+            return screeningList;
         }
-        */
+        
 
         // Post a screening
         [HttpPost]

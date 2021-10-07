@@ -33,6 +33,18 @@ namespace CineTecBackend.Controllers
 
         }
 
+        // Get a movie by movie theater
+        [HttpGet("filter_movie/{theater_name}")]
+        public async Task<ActionResult<IEnumerable<Movie>>> GetMoviePerTheater(string theater_name)
+        {
+            var movieList = await _context.Movies.FromSqlInterpolated($@"SELECT	M.Original_name, M.gendre, M.Name, M.Director, M.Lenght 
+                                                                        FROM MOVIE AS M, SCREENING AS SC, CINEMA AS C, MOVIE_THEATER AS MT
+                                                                        WHERE M.Original_name = SC.Movie_original_name AND SC.Cinema_number = C.Number
+                                                                       AND C.Name_movie_theater = MT.Name AND MT.Name = {theater_name};").ToListAsync();
+
+            return movieList;
+        }
+
         // Post a movie
         [HttpPost]
         public async Task<ActionResult> Add(Movie movie)
