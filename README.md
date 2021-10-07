@@ -112,6 +112,18 @@ This repo corresponds to the backend of the backend of the first project of the 
 ]
 ```
 
+#### Actors
+
+```Json
+[
+  {
+    "originalMovieName": "Titanic",
+    "actorName": "Leonardo"
+  }
+]
+```
+
+
 ## Backend requests
 
 Here we have a small description of the programmed requests and their respective response (if there is any).
@@ -208,6 +220,10 @@ Deletes a movie from the database. If the movie doesn't exists then a not found 
 
 Updates the information from a movie in the database. If the movie doesn't exists then a not found error (404) will be answered. This is a PUT request with this url `http://localhost:5000/movie/#` where `#` represents the original name of the movie of the request. The body of this requests is the one specified for the movie.
 
+###### GET movie by movie theater
+
+This requests shows all the movies available in one especific movie theater. The url is `http://localhost:5000/filter_movie/{theater_name}`. The body of the answer corresponds to the one of movies.
+
 ### Screening Requests
 
 ###### POST screening
@@ -231,6 +247,11 @@ Deletes a screening from the database. If the screening doesn't exists then a no
 
 Updates the information from a screening in the database. If the screening doesn't exists then a not found error (404) will be answered. Also this relation has the cinemaNumber and movieOriginalName foreign keys, if one of these keys is not in the database a Conflict will be returned. This is a PUT request with this url `http://localhost:5000/movie/#` where `#` represents the id of the screening of the request. The body of this requests is the one specified for the screening.
 
+###### GET screening by movie theater and movie name
+
+This requests is used to filter the movies based on a movie theater and movie name. The url is `http://localhost:5000//screening/filter_screening/{theater_name}/{movie_name}`. The answer of this requests corresponds to the one of screening.
+
+
 ### Seat Requests
 
 ###### POST seat
@@ -251,4 +272,17 @@ Updates the information from a seat with the respective screeningID, row number 
 
 ### Actors Requests
 
-* this is missing
+###### POST actor
+
+Add a new actor, where the original movie name and the actor name is the key attribute. If theres already a key attribute with the respective original name there will be an 409 error (Conflict). This is a POST request with this url `http://localhost:5000/actor` the body to include corresponds to the one of the actor.
+
+###### GET actors
+
+Get all the actors saved in the database. This is a GET request with this url `http://localhost:5000/actor` the body aswered has the form of the actors JSON body.
+
+###### DELETE actor
+
+Deletes a actor from the database. If the actor doesn't exists then a not found error (404) will be answered. This is a DELETE request with this url `http://localhost:5000/actor/{movie_name}/{name}` where `movie_name` represents the original name of the movie and name the name of the actor to remove. This request has no answer.
+
+
+

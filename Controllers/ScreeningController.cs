@@ -35,7 +35,7 @@ namespace CineTecBackend.Controllers
 
         
         // Get screening per theater per movie
-        [HttpGet("filter_screening{theater_name}/{movie_name}")]
+        [HttpGet("filter_screening/{theater_name}/{movie_name}")]
         public async Task<ActionResult<IEnumerable<Screening>>> GetScreeningPerTheater(string theater_name, string movie_name)
         {
 
