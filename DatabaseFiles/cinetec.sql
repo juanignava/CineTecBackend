@@ -1,18 +1,19 @@
 CREATE TABLE CLIENT
 (
     ID              INT  PRIMARY KEY,
-    First_name      VARCHAR(10),
-    Last_name       VARCHAR(10),
-    Sec_last_name   VARCHAR(10),
+    First_name      VARCHAR(20),
+    Last_name       VARCHAR(20),
+    Sec_last_name   VARCHAR(20),
     Age             INT,
     Birth_date      DATE,
-    Phone_number    VARCHAR(10)
+    Phone_number    VARCHAR(20),
+	Password		VARCHAR(30)
 );
 
 CREATE TABLE MOVIE_THEATER
 (
-    Name            VARCHAR(10) PRIMARY KEY,
-    Location        VARCHAR(10),
+    Name            VARCHAR(20) PRIMARY KEY,
+    Location        VARCHAR(20),
     Cinema_amount   INT
 );
 
@@ -22,15 +23,15 @@ CREATE TABLE CINEMA
     Rows                INT,
     Columns             INT,
     Capacity            INT,
-    Name_movie_theater  VARCHAR(10)
+    Name_movie_theater  VARCHAR(20)
 );
 
 CREATE TABLE MOVIE
 (
-    Original_name       VARCHAR(10) PRIMARY KEY,
-    Gendre              VARCHAR(10),
-    Name                VARCHAR(10),
-    Director            VARCHAR(10),
+    Original_name       VARCHAR(20) PRIMARY KEY,
+    Gendre              VARCHAR(20),
+    Name                VARCHAR(20),
+    Director            VARCHAR(20),
     Lenght              INT
 );
 
@@ -38,43 +39,43 @@ CREATE TABLE SCREENING
 (
     ID                  INT PRIMARY KEY,
     Cinema_number       INT,
-    Movie_original_name VARCHAR(10),
+    Movie_original_name VARCHAR(20),
     Hour                INT,
     Capacity            INT
 );
 
 CREATE TABLE ACTORS
 (
-    Original_movie_name VARCHAR(10),
-    Actor_name          VARCHAR(10),
+    Original_movie_name VARCHAR(20),
+    Actor_name          VARCHAR(20),
     PRIMARY KEY (Original_movie_name, Actor_name)
 );
 
 CREATE TABLE SEAT
 (
     Cinema_number       INT,
-    Row_num                 INT,
-    Column_num              INT,
-    State               VARCHAR(10),
-    PRIMARY KEY (Cinema_number, Row, Column)
+    Row_num             INT,
+    Column_num          INT,
+    State               VARCHAR(20),
+    PRIMARY KEY (Cinema_number, Row_num, Column_num)
 );
 
 ALTER TABLE CINEMA
 ADD CONSTRAINT CINEMA_MOVIE_THEATER_FK FOREIGN KEY (Name_movie_theater)
-REFERENCES MOVIE_THEATER(Name)
+REFERENCES MOVIE_THEATER(Name);
 
 ALTER TABLE SCREENING
 ADD CONSTRAINT SCREENING_CINEMA_FK FOREIGN KEY (Cinema_number)
-REFERENCES CINEMA(Number)
+REFERENCES CINEMA(Number);
 
 ALTER TABLE SCREENING
 ADD CONSTRAINT SCREENING_MOVIE_FK FOREIGN KEY (Movie_original_name)
-REFERENCES MOVIE(Original_name)
+REFERENCES MOVIE(Original_name);
 
 ALTER TABLE SEAT
 ADD CONSTRAINT SEAT_CINEMA_FK FOREIGN KEY (Cinema_number)
-REFERENCES CINEMA(Number)
+REFERENCES CINEMA(Number);
 
 ALTER TABLE ACTORS
 ADD CONSTRAINT ACTORS_MOVIE_FK FOREIGN KEY (Original_movie_name)
-REFERENCES MOVIE (Original_name)
+REFERENCES MOVIE (Original_name);

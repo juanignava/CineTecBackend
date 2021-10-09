@@ -4,21 +4,12 @@ INSERT INTO CLIENT (ID, First_name, Last_name, Sec_last_name, Age, Birth_date, P
             (3, 'Luis', 'Morales', 'Rodriguez', '20', '2001-02-08', '87778899', 'passwordluis'),
             (4, 'Ignacio', 'Grnados', 'Marin', '20', '2001-02-08', '87176644', 'passwordnacho');
 
-SELECT
-    *
-from
-    CLIENT;
-
 
 INSERT INTO MOVIE_THEATER (Name, Location, Cinema_amount)
     VALUES  ('Paseo', 'Cartago', 2),
             ('Multiplaza', 'San Jose', 1),
-            ('CineMark', 'Heredia', 2)
+            ('CineMark', 'Heredia', 2);
 
-SELECT
-    *
-from 
-    MOVIE_THEATER
 
 INSERT INTO  CINEMA (Number, Rows, Columns, Capacity, Name_movie_theater)
     VALUES  (1, 10, 10, 50, 'Paseo'),
@@ -27,10 +18,6 @@ INSERT INTO  CINEMA (Number, Rows, Columns, Capacity, Name_movie_theater)
             (4, 20, 15, 50, 'CineMark'),
             (5, 10, 10, 50, 'CineMark');
 
-SELECT
-    *
-from 
-    CINEMA
 
 INSERT INTO MOVIE (Original_name, Gendre, Director, Lenght)
     VALUES ('Titanic', 'Suspense', 'Cameron', 180),
@@ -38,10 +25,6 @@ INSERT INTO MOVIE (Original_name, Gendre, Director, Lenght)
            ('Space Jam', 'Comedy', 'Lee', 140),
            ('Black Widow', 'Action', 'Shortlan', 110);
 
-SELECT
-    *
-from 
-    MOVIE
 
 INSERT INTO ACTORS(Original_movie_name, Actor_name)
     VALUES  ('Titanic', 'DiCaprio'),
