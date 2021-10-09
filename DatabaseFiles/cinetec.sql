@@ -32,6 +32,7 @@ CREATE TABLE MOVIE
     Gendre              VARCHAR(20),
     Name                VARCHAR(20),
     Director            VARCHAR(20),
+	Image_url			VARCHAR(350),
     Lenght              INT
 );
 
@@ -53,11 +54,11 @@ CREATE TABLE ACTORS
 
 CREATE TABLE SEAT
 (
-    Cinema_number       INT,
+    Screening_id       INT,
     Row_num             INT,
     Column_num          INT,
     State               VARCHAR(20),
-    PRIMARY KEY (Cinema_number, Row_num, Column_num)
+    PRIMARY KEY (Screening_id, Row_num, Column_num)
 );
 
 ALTER TABLE CINEMA
@@ -73,8 +74,8 @@ ADD CONSTRAINT SCREENING_MOVIE_FK FOREIGN KEY (Movie_original_name)
 REFERENCES MOVIE(Original_name);
 
 ALTER TABLE SEAT
-ADD CONSTRAINT SEAT_CINEMA_FK FOREIGN KEY (Cinema_number)
-REFERENCES CINEMA(Number);
+ADD CONSTRAINT SEAT_SCREENING_FK FOREIGN KEY (Screening_id)
+REFERENCES SCREENING(ID);
 
 ALTER TABLE ACTORS
 ADD CONSTRAINT ACTORS_MOVIE_FK FOREIGN KEY (Original_movie_name)

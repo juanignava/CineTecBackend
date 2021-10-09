@@ -12,6 +12,6 @@ namespace CineTecBackend
         public int ColumnNum { get; set; }
         public string State { get; set; }
 
-        public virtual Cinema Screening { get; set; }
+        public virtual Screening Screening { get; set; }
     }
 }

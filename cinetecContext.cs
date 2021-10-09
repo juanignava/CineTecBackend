@@ -46,11 +46,11 @@ namespace CineTecBackend
                 entity.ToTable("actors");
 
                 entity.Property(e => e.OriginalMovieName)
-                    .HasMaxLength(10)
+                    .HasMaxLength(20)
                     .HasColumnName("original_movie_name");
 
                 entity.Property(e => e.ActorName)
-                    .HasMaxLength(10)
+                    .HasMaxLength(20)
                     .HasColumnName("actor_name");
 
                 entity.HasOne(d => d.OriginalMovieNameNavigation)
@@ -71,10 +71,12 @@ namespace CineTecBackend
                     .ValueGeneratedNever()
                     .HasColumnName("number");
 
+                entity.Property(e => e.Capacity).HasColumnName("capacity");
+
                 entity.Property(e => e.Columns).HasColumnName("columns");
 
                 entity.Property(e => e.NameMovieTheater)
-                    .HasMaxLength(10)
+                    .HasMaxLength(20)
                     .HasColumnName("name_movie_theater");
 
                 entity.Property(e => e.Rows).HasColumnName("rows");
@@ -100,23 +102,23 @@ namespace CineTecBackend
                     .HasColumnName("birth_date");
 
                 entity.Property(e => e.FirstName)
-                    .HasMaxLength(10)
+                    .HasMaxLength(20)
                     .HasColumnName("first_name");
 
                 entity.Property(e => e.LastName)
-                    .HasMaxLength(10)
+                    .HasMaxLength(20)
                     .HasColumnName("last_name");
 
                 entity.Property(e => e.Password)
-                    .HasMaxLength(20)
+                    .HasMaxLength(30)
                     .HasColumnName("password");
 
                 entity.Property(e => e.PhoneNumber)
-                    .HasMaxLength(10)
+                    .HasMaxLength(20)
                     .HasColumnName("phone_number");
 
                 entity.Property(e => e.SecLastName)
-                    .HasMaxLength(10)
+                    .HasMaxLength(20)
                     .HasColumnName("sec_last_name");
             });
 
@@ -128,21 +130,25 @@ namespace CineTecBackend
                 entity.ToTable("movie");
 
                 entity.Property(e => e.OriginalName)
-                    .HasMaxLength(10)
+                    .HasMaxLength(20)
                     .HasColumnName("original_name");
 
                 entity.Property(e => e.Director)
-                    .HasMaxLength(10)
+                    .HasMaxLength(20)
                     .HasColumnName("director");
 
                 entity.Property(e => e.Gendre)
-                    .HasMaxLength(10)
+                    .HasMaxLength(20)
                     .HasColumnName("gendre");
+
+                entity.Property(e => e.ImageUrl)
+                    .HasMaxLength(350)
+                    .HasColumnName("image_url");
 
                 entity.Property(e => e.Lenght).HasColumnName("lenght");
 
                 entity.Property(e => e.Name)
-                    .HasMaxLength(10)
+                    .HasMaxLength(20)
                     .HasColumnName("name");
             });
 
@@ -154,13 +160,13 @@ namespace CineTecBackend
                 entity.ToTable("movie_theater");
 
                 entity.Property(e => e.Name)
-                    .HasMaxLength(10)
+                    .HasMaxLength(20)
                     .HasColumnName("name");
 
                 entity.Property(e => e.CinemaAmount).HasColumnName("cinema_amount");
 
                 entity.Property(e => e.Location)
-                    .HasMaxLength(10)
+                    .HasMaxLength(20)
                     .HasColumnName("location");
             });
 
@@ -179,7 +185,7 @@ namespace CineTecBackend
                 entity.Property(e => e.Hour).HasColumnName("hour");
 
                 entity.Property(e => e.MovieOriginalName)
-                    .HasMaxLength(10)
+                    .HasMaxLength(20)
                     .HasColumnName("movie_original_name");
 
                 entity.HasOne(d => d.CinemaNumberNavigation)
@@ -207,14 +213,14 @@ namespace CineTecBackend
                 entity.Property(e => e.ColumnNum).HasColumnName("column_num");
 
                 entity.Property(e => e.State)
-                    .HasMaxLength(10)
+                    .HasMaxLength(20)
                     .HasColumnName("state");
 
                 entity.HasOne(d => d.Screening)
                     .WithMany(p => p.Seats)
                     .HasForeignKey(d => d.ScreeningId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("seat_cinema_fk");
+                    .HasConstraintName("seat_screening_fk");
             });
 
             OnModelCreatingPartial(modelBuilder);

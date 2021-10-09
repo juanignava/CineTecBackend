@@ -65,14 +65,16 @@ This repo corresponds to the backend of the backend of the first project of the 
     "gendre": "Suspense",
     "name": null,
     "director": "Cameron",
-    "lenght": 180,
+    "imageUrl": "https://github.com/juanignava/CineTecBackend/blob/main/MovieImages/Titanic.jpg",
+    "lenght": 180
   },
   {
     "originalName": "Minions",
     "gendre": "Comedy",
     "name": null,
-    "director": "No one",
-    "lenght": 150,
+    "director": "Polack",
+    "imageUrl": "https://github.com/juanignava/CineTecBackend/blob/main/MovieImages/Minions.jpg",
+    "lenght": 120
   }
 ]
 ```
