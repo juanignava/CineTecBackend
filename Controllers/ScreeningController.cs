@@ -97,6 +97,15 @@ namespace CineTecBackend.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteScreening(int id)
         {
+            //var param = new SqlParameter("@param", id.ToString());
+            var seats = _context.Seats.Where(seat => seat.ScreeningId == id);
+            
+            foreach (var seat in seats)
+            {
+                _context.Seats.Remove(seat);
+            }
+            await _context.SaveChangesAsync();
+
             var itemToRemove = await _context.Screenings.FindAsync(id);
 
             if (itemToRemove == null)
