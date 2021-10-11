@@ -32,7 +32,7 @@ This repo corresponds to the backend of the backend of the first project of the 
   {
     "name": "Multiplaza",
     "location": "San Jose",
-    "cinemaAmount": 6,
+    "cinemaAmount": 6
   }
 ]
 ```
@@ -45,13 +45,13 @@ This repo corresponds to the backend of the backend of the first project of the 
     "number": 1,
     "rows": 10,
     "columns": 10,
-    "nameMovieTheater": "Paseo",
+    "nameMovieTheater": "Paseo"
   },
   {
     "number": 2,
     "rows": 10,
     "columns": 5,
-    "nameMovieTheater": "Paseo",
+    "nameMovieTheater": "Paseo"
   }
 ]
 ```
@@ -88,7 +88,7 @@ This repo corresponds to the backend of the backend of the first project of the 
     "cinemaNumber": 1,
     "movieOriginalName": "Titanic",
     "hour": 10,
-    "capacity": 50,
+    "capacity": 50
   }
 ]
 ```

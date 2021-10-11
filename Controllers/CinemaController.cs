@@ -43,6 +43,8 @@ namespace CineTecBackend.Controllers
             if (itemToAdd != null || itemToAddMovieTheater == null)
                 return Conflict();
 
+            itemToAddMovieTheater.CinemaAmount = itemToAddMovieTheater.CinemaAmount+1;
+
             _context.Cinemas.Add(cinema);
             await _context.SaveChangesAsync();
 
