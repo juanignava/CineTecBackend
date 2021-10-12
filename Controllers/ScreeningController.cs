@@ -83,16 +83,31 @@ namespace CineTecBackend.Controllers
 
             var itemAddedCinema = await _context.Cinemas.FindAsync(screening.CinemaNumber);
 
+            int restrictedNum = 1;
+            bool isRestricted = true;
+            if (screening.Capacity == 50) restrictedNum = 2;
+            else if(screening.Capacity == 30) restrictedNum = 3;
+            else if(screening.Capacity == 20) restrictedNum = 4;
+            else isRestricted = false;
+
             for (int i = 1; i <= itemAddedCinema.Rows; i++)
             {
                 for (int j = 1; j <= itemAddedCinema.Columns; j++)   {
                     
+                    string state = "free";
+                    if (isRestricted) {
+                        if ((i+j)%restrictedNum == 0)
+                        {
+                            state = "restricted";
+                        }
+                    }
+
                     Seat seat = new ()
                     {
                         ScreeningId = screening.Id,
                         RowNum = i,
                         ColumnNum = j,
-                        State = "free"
+                        State = state
                     };
 
                     _context.Seats.Add(seat);
