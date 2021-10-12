@@ -20,10 +20,10 @@ INSERT INTO  CINEMA (Number, Rows, Columns, Capacity, Name_movie_theater)
 
 
 INSERT INTO MOVIE (Original_name, Gendre, Director, Image_url, Lenght)
-    VALUES ('Titanic', 'Suspense', 'Cameron', 'https://github.com/juanignava/CineTecBackend/blob/main/MovieImages/Titanic.jpg', 180),
-           ('Minions', 'Comedy', 'Polack', 'https://github.com/juanignava/CineTecBackend/blob/main/MovieImages/Minions.jpg', 120),
-           ('Space Jam', 'Comedy', 'Lee', 'https://github.com/juanignava/CineTecBackend/blob/main/MovieImages/Space%20Jam.jpg', 140),
-           ('Black Widow', 'Action', 'Shortlan', 'https://github.com/juanignava/CineTecBackend/blob/main/MovieImages/Black%20Widow.jpg', 110);
+    VALUES ('Titanic', 'Suspense', 'Cameron', 'https://m.media-amazon.com/images/M/MV5BMDdmZGU3NDQtY2E5My00ZTliLWIzOTUtMTY4ZGI1YjdiNjk3XkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_.jpg', 180),
+           ('Minions', 'Comedy', 'Polack', 'https://images.moviesanywhere.com/913f00d3cac979222c7db177dead87ae/a2df1afa-57b8-48a9-bec8-4293d0097236.jpg', 120),
+           ('Space Jam', 'Comedy', 'Lee', 'https://static.metacritic.com/images/products/movies/4/895501b7c879f8b8b236524db91ee9ab.jpg', 140),
+           ('Black Widow', 'Action', 'Shortlan', 'https://images-na.ssl-images-amazon.com/images/I/914MHuDfMSL.jpg', 110);
 
 
 INSERT INTO ACTORS(Original_movie_name, Actor_name)
