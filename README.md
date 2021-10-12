@@ -180,7 +180,17 @@ Updates the information from a movie theater in the databse. If the movie theate
 
 ###### POST cinema
 
-Add a new cinema, where the number is the key attribute. If theres already a cinema with the respective number there will be an 409 error (Conflict). Also there is a foreign key with the name of the movie theater, if this foreign key doesn't exist a conflict will be returned. This is a POST request with this url `http://localhost:5000/cinema` the body to include corresponds to the one of the cinema.
+Add a new cinema, there is a foreign key with the name of the movie theater, if this foreign key doesn't exist a conflict will be returned. This is a POST request with this url `http://localhost:5000/cinema`.
+
+There is no need to specify the cinema number in the post JSON, this number will be added by the backend in order to avoid conflicts. The post JSON has to be like this one:
+
+```Json
+{
+  "rows": 10,
+  "columns": 10,
+  "nameMovieTheater": "Paseo"
+}
+```
 
 ###### GET cinemas
 
@@ -230,7 +240,19 @@ This requests shows all the movies available in one especific movie theater. The
 
 ###### POST screening
 
-Add a new screening, where the id is the key attribute. If theres already a screening with the respective id there will be an 409 error (Conflict). Also this relation has the cinemaNumber and movieOriginalName foreign keys, if one of these keys is not in the database a Conflict will be returned. This is a POST request with this url `http://localhost:5000/screening` the body to include corresponds to the one of the screening.
+Add a new screening, there is a foreign key in cinemaNumber and movieOriginalName foreign keys, if one of these keys is not in the database a Conflict will be returned. This is a POST request with this url `http://localhost:5000/screening`.
+
+There is no need to include the id in the post JSON, the backend will define the id, a JSON like this one will be enough:
+
+```Json
+{
+
+  "cinemaNumber": 1,
+  "movieOriginalName": "Titanic",
+  "hour": 10,
+  "capacity": 50
+}
+```
 
 ###### GET screening
 
