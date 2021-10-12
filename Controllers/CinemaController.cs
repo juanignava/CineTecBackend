@@ -37,11 +37,32 @@ namespace CineTecBackend.Controllers
         [HttpPost]
         public async Task<ActionResult> Add(Cinema cinema)
         {
-            var itemToAdd = await _context.Cinemas.FindAsync(cinema.Number);
+            //var itemToAdd = await _context.Cinemas.FindAsync(cinema.Number);
 
             var itemToAddMovieTheater = await _context.MovieTheaters.FindAsync(cinema.NameMovieTheater);
-            if (itemToAdd != null || itemToAddMovieTheater == null)
+            //if (itemToAdd != null || itemToAddMovieTheater == null)
+            if (itemToAddMovieTheater == null)
                 return Conflict();
+
+            //var max_num  = await _context.Database.ExecuteSqlRawAsync("SELECT MAX(Number) FROM CINEMA");
+            //int max_num  = _context.Database.ExecuteSqlInterpolated("SELECT MAX(Number) FROM CINEMA");
+
+            var cinemas = await _context.Cinemas.ToListAsync();
+
+            int max = 0;
+
+            foreach (var cin in cinemas)
+            {
+                if (cin.Number > max)
+                {
+                    max = cin.Number;
+                }
+            }
+
+            Console.WriteLine(max);
+            cinema.Number = max+1;
+
+            itemToAddMovieTheater.CinemaAmount = itemToAddMovieTheater.CinemaAmount+1;
 
             _context.Cinemas.Add(cinema);
             await _context.SaveChangesAsync();

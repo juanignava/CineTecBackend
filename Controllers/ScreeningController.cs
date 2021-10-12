@@ -52,9 +52,32 @@ namespace CineTecBackend.Controllers
         [HttpPost]
         public async Task<ActionResult> Add(Screening screening)
         {
+            /*
             var itemToAdd = await _context.Screenings.FindAsync(screening.Id);
             if (itemToAdd != null)
                 return Conflict();
+            */
+
+            var screening_cinema = await _context.Cinemas.FindAsync(screening.CinemaNumber);
+            var screening_movie = await _context.Movies.FindAsync(screening.MovieOriginalName);
+
+            if(screening_cinema == null || screening_movie == null) return Conflict();
+
+            var screenings = await _context.Screenings.ToListAsync();
+
+            int max = 0;
+
+            foreach (var screen in screenings)
+            {
+                if (screen.Id > max)
+                {
+                    max = screen.Id;
+                }
+            }
+
+            Console.WriteLine(max);
+            screening.Id = max+1;
+
             _context.Screenings.Add(screening);
             await _context.SaveChangesAsync();
 
