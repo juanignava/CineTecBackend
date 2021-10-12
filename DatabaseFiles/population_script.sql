@@ -22,7 +22,7 @@ INSERT INTO  CINEMA (Number, Rows, Columns, Capacity, Name_movie_theater)
 INSERT INTO MOVIE (Original_name, Gendre, Director, Image_url, Lenght)
     VALUES ('Titanic', 'Suspense', 'Cameron', 'https://m.media-amazon.com/images/M/MV5BMDdmZGU3NDQtY2E5My00ZTliLWIzOTUtMTY4ZGI1YjdiNjk3XkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_.jpg', 180),
            ('Minions', 'Comedy', 'Polack', 'https://images.moviesanywhere.com/913f00d3cac979222c7db177dead87ae/a2df1afa-57b8-48a9-bec8-4293d0097236.jpg', 120),
-           ('Space Jam', 'Comedy', 'Lee', 'https://static.metacritic.com/images/products/movies/4/895501b7c879f8b8b236524db91ee9ab.jpg', 140),
+           ('Space Jam', 'Comedy', 'Lee', 'https://c8.alamy.com/compes/2ecg8yh/space-jam-1996-dirigida-por-joe-pytka-y-protagonizada-por-michael-jordan-wayne-knight-y-theresa-randle-accion-en-vivo-pelicula-hibrida-animada-donde-los-personajes-de-dibujos-animados-looney-tunes-inscriben-la-ayuda-de-michael-jordan-para-ganar-un-partido-de-baloncesto-y-su-libertad-2ecg8yh.jpg', 140),
            ('Black Widow', 'Action', 'Shortlan', 'https://images-na.ssl-images-amazon.com/images/I/914MHuDfMSL.jpg', 110);
 
 
