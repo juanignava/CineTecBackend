@@ -21,7 +21,8 @@ namespace CineTecBackend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Cinema>>> GetCinemas()
         {
-            return await _context.Cinemas.ToListAsync();
+            // Use raw SQL query to get all cinemas
+            return await _context.Cinemas.FromSqlRaw(SqlQueries.GetAllCinemas).ToListAsync();
 
         }
 
@@ -29,7 +30,11 @@ namespace CineTecBackend.Controllers
         [HttpGet("{number}")]
         public async Task<ActionResult<Cinema>> GetCinema(int number)
         {
-            return await _context.Cinemas.FindAsync(number);
+            // Use SQL query to get an specific cinema
+            var cinema = await _context.Cinemas.FromSqlInterpolated(@$"SELECT * 
+                                                                        FROM CINEMA
+                                                                        WHERE Number = {number}").FirstOrDefaultAsync();
+            return cinema;
 
         }
 
@@ -37,20 +42,18 @@ namespace CineTecBackend.Controllers
         [HttpPost]
         public async Task<ActionResult> Add(Cinema cinema)
         {
-            //var itemToAdd = await _context.Cinemas.FindAsync(cinema.Number);
+            // Search if the related movie theater exists
+            var itemToAddMovieTheater = await _context.MovieTheaters.FromSqlInterpolated(@$"SELECT * 
+                                                                        FROM MOVIE_THEATER
+                                                                        WHERE Name = {cinema.NameMovieTheater}").FirstOrDefaultAsync();
 
-            var itemToAddMovieTheater = await _context.MovieTheaters.FindAsync(cinema.NameMovieTheater);
-            //if (itemToAdd != null || itemToAddMovieTheater == null)
             if (itemToAddMovieTheater == null)
                 return Conflict();
 
-            //var max_num  = await _context.Database.ExecuteSqlRawAsync("SELECT MAX(Number) FROM CINEMA");
-            //int max_num  = _context.Database.ExecuteSqlInterpolated("SELECT MAX(Number) FROM CINEMA");
-
-            var cinemas = await _context.Cinemas.ToListAsync();
+            // assign a cinema number based on the existing numbers
+            var cinemas = await _context.Cinemas.FromSqlRaw(SqlQueries.GetAllCinemas).ToListAsync();
 
             int max = 0;
-
             foreach (var cin in cinemas)
             {
                 if (cin.Number > max)
@@ -59,12 +62,14 @@ namespace CineTecBackend.Controllers
                 }
             }
 
-            Console.WriteLine(max);
             cinema.Number = max+1;
 
+            // update the movie theater cinema amount
             itemToAddMovieTheater.CinemaAmount = itemToAddMovieTheater.CinemaAmount+1;
 
             _context.Cinemas.Add(cinema);
+
+            // save changes in the database
             await _context.SaveChangesAsync();
 
             return Ok();
@@ -74,17 +79,27 @@ namespace CineTecBackend.Controllers
         [HttpPut("{number}")]
         public async Task<ActionResult> UpdateCinema(int number, Cinema cinema)
         {
-            var itemToUpdate = await _context.Cinemas.FindAsync(number);
+            // first search if the cinema exists
+            var itemToUpdate = await _context.Cinemas.FromSqlInterpolated(@$"SELECT * 
+                                                                        FROM CINEMA
+                                                                        WHERE Number = {number}").FirstOrDefaultAsync();
+
             if (itemToUpdate == null)
                 return NotFound();
 
-            var itemToUpdateMovieTheater = await _context.MovieTheaters.FindAsync(cinema.NameMovieTheater);
+            // get the related movie theater
+            var itemToUpdateMovieTheater = await _context.MovieTheaters.FromSqlInterpolated(@$"SELECT * 
+                                                                        FROM MOVIE_THEATER
+                                                                        WHERE Name = {cinema.NameMovieTheater}").FirstOrDefaultAsync();
+
             if (itemToUpdateMovieTheater == null)
                 return Conflict();
             
+            // update the cinema data
             itemToUpdate.Rows = cinema.Rows;
             itemToUpdate.Columns = cinema.Columns;
 
+            // save changes in the database
             await _context.SaveChangesAsync();
             return Ok();
         }
@@ -93,14 +108,30 @@ namespace CineTecBackend.Controllers
         [HttpDelete("{number}")]
         public async Task<ActionResult> DeleteCinema(int number)
         {
-            var itemToRemove = await _context.Cinemas.FindAsync(number);
+            // first search if the item exists
+            var itemToRemove = await _context.Cinemas.FromSqlInterpolated(@$"SELECT * 
+                                                                        FROM CINEMA
+                                                                        WHERE Number = {number}").FirstOrDefaultAsync();
 
             if (itemToRemove == null)
                 return NotFound();
 
-            _context.Cinemas.Remove(itemToRemove);
+            // delete the cinema 
+            await _context.Database.ExecuteSqlInterpolatedAsync(@$"DELETE FROM CINEMA 
+                                                                WHERE Number = {number}");
+
+            // decrease amount of cinemas related to the movie teather
+            var itemToDeleteMovieTheater = await _context.MovieTheaters.FromSqlInterpolated(@$"SELECT * 
+                                                                        FROM MOVIE_THEATER
+                                                                        WHERE Name = {itemToRemove.NameMovieTheater}").FirstOrDefaultAsync();
+
+            itemToDeleteMovieTheater.CinemaAmount = itemToDeleteMovieTheater.CinemaAmount - 1;
+            
+            // Save changes in the database
             await _context.SaveChangesAsync();
             return Ok();
+            
+            
         }
     }
 }

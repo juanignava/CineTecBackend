@@ -21,7 +21,8 @@ namespace CineTecBackend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Movie>>> GetMovies()
         {
-            return await _context.Movies.ToListAsync();
+            // Use raw SQL query to get all movieas
+            return await _context.Movies.FromSqlRaw(SqlQueries.GetAllMovies).ToListAsync();
 
         }
 
@@ -29,7 +30,12 @@ namespace CineTecBackend.Controllers
         [HttpGet("{name}")]
         public async Task<ActionResult<Movie>> GetMovie(string name)
         {
-            return await _context.Movies.FindAsync(name);
+            // Use SQL query to get an specific movie
+            var movie = await _context.Movies.FromSqlInterpolated(@$"SELECT * 
+                                                                        FROM MOVIE
+                                                                        WHERE Original_Name = {name}").FirstOrDefaultAsync();
+
+            return movie;
 
         }
 
@@ -37,7 +43,8 @@ namespace CineTecBackend.Controllers
         [HttpGet("filter_movie/{theater_name}")]
         public async Task<ActionResult<IEnumerable<Movie>>> GetMoviePerTheater(string theater_name)
         {
-            var movieList = await _context.Movies.FromSqlInterpolated($@"SELECT	M.Original_name, M.gendre, M.Name, M.Director, M.Lenght 
+            // Use a sql query to get an specific movie based on the movie theater name
+            var movieList = await _context.Movies.FromSqlInterpolated($@"SELECT	M.Original_name, M.gendre, M.Name, M.Director, M.Image_url, M.Lenght 
                                                                         FROM MOVIE AS M, SCREENING AS SC, CINEMA AS C, MOVIE_THEATER AS MT
                                                                         WHERE M.Original_name = SC.Movie_original_name AND SC.Cinema_number = C.Number
                                                                        AND C.Name_movie_theater = MT.Name AND MT.Name = {theater_name};").ToListAsync();
@@ -49,10 +56,15 @@ namespace CineTecBackend.Controllers
         [HttpPost]
         public async Task<ActionResult> Add(Movie movie)
         {
+            // Look if the movie exists
             var itemToAdd = await _context.Movies.FindAsync(movie.OriginalName);
             if (itemToAdd != null)
                 return Conflict();
+
+            // add the movie
             _context.Movies.Add(movie);
+
+            // save the changes in the database
             await _context.SaveChangesAsync();
             return Ok();
         }
@@ -61,14 +73,18 @@ namespace CineTecBackend.Controllers
         [HttpPut("{name}")]
         public async Task<ActionResult> UpdateMovie(string name, Movie movie)
         {
+            // search if the movie exists
             var itemToUpdate = await _context.Movies.FindAsync(name);
             if (itemToUpdate == null)
                 return NotFound();
+
+            // update the movie values
             itemToUpdate.Gendre = movie.Gendre;
             itemToUpdate.Name = movie.Name;
             itemToUpdate.Director = movie.Director;
             itemToUpdate.Lenght = movie.Lenght;
 
+            // save the changes in the database
             await _context.SaveChangesAsync();
             return Ok();
         }
@@ -77,11 +93,13 @@ namespace CineTecBackend.Controllers
         [HttpDelete("{name}")]
         public async Task<ActionResult> DeleteMovie(string name)
         {
+            // search if the movie exists before deleting it
             var itemToRemove = await _context.Movies.FindAsync(name);
 
             if (itemToRemove == null)
                 return NotFound();
 
+            // remove the movie from the datbase and update
             _context.Movies.Remove(itemToRemove);
             await _context.SaveChangesAsync();
             return Ok();

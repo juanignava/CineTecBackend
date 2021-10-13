@@ -21,7 +21,8 @@ namespace CineTecBackend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Screening>>> GetScreenings()
         {
-            return await _context.Screenings.ToListAsync();
+            // Use raw SQL query to get all screenings
+            return await _context.Screenings.FromSqlRaw(SqlQueries.GetAllScreenings).ToListAsync();
 
         }
 
@@ -29,8 +30,13 @@ namespace CineTecBackend.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Screening>> GetScreening(int id)
         {
-            return await _context.Screenings.FindAsync(id);
+            // Use SQL query to get an specific client
+            var screening = await _context.Screenings.FromSqlInterpolated(@$"SELECT * 
+                                                                        FROM SCREENING
+                                                                        WHERE Id = {id}").FirstOrDefaultAsync();
 
+            return screening;
+            
         }
 
         
@@ -52,21 +58,15 @@ namespace CineTecBackend.Controllers
         [HttpPost]
         public async Task<ActionResult> Add(Screening screening)
         {
-            /*
-            var itemToAdd = await _context.Screenings.FindAsync(screening.Id);
-            if (itemToAdd != null)
-                return Conflict();
-            */
-
+            // Look if the related cinema and movie exist
             var screening_cinema = await _context.Cinemas.FindAsync(screening.CinemaNumber);
             var screening_movie = await _context.Movies.FindAsync(screening.MovieOriginalName);
 
             if(screening_cinema == null || screening_movie == null) return Conflict();
 
+            // define the screening id based on the id of the rest of the instances
             var screenings = await _context.Screenings.ToListAsync();
-
             int max = 0;
-
             foreach (var screen in screenings)
             {
                 if (screen.Id > max)
@@ -75,12 +75,13 @@ namespace CineTecBackend.Controllers
                 }
             }
 
-            Console.WriteLine(max);
             screening.Id = max+1;
-
             _context.Screenings.Add(screening);
+
+            // add the screening and save the changes
             await _context.SaveChangesAsync();
 
+            // create the instances of the seats of a screening
             var itemAddedCinema = await _context.Cinemas.FindAsync(screening.CinemaNumber);
 
             int restrictedNum = 1;
@@ -110,6 +111,7 @@ namespace CineTecBackend.Controllers
                         State = state
                     };
 
+                    // add the new seat and save the changes in the database
                     _context.Seats.Add(seat);
                     await _context.SaveChangesAsync();
                 }
@@ -122,11 +124,16 @@ namespace CineTecBackend.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateScreening(int id, Screening screening)
         {
+            // Check if the item exists
             var itemToUpdate = await _context.Screenings.FindAsync(id);
             if (itemToUpdate == null)
                 return NotFound();
+
+            // update the item data
             itemToUpdate.Hour = screening.Hour;
             itemToUpdate.Capacity = screening.Capacity;
+
+            // save the changes in the database
             await _context.SaveChangesAsync();
             return Ok();
         }
@@ -135,7 +142,6 @@ namespace CineTecBackend.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteScreening(int id)
         {
-            //var param = new SqlParameter("@param", id.ToString());
             var seats = _context.Seats.Where(seat => seat.ScreeningId == id);
             
             foreach (var seat in seats)
@@ -149,7 +155,9 @@ namespace CineTecBackend.Controllers
             if (itemToRemove == null)
                 return NotFound();
 
-            _context.Screenings.Remove(itemToRemove);
+            // Delete the screening using an SQL query
+            await _context.Database.ExecuteSqlInterpolatedAsync(@$"DELETE FROM SCREENING 
+                                                                WHERE Id = {id}");
             await _context.SaveChangesAsync();
             return Ok();
         }

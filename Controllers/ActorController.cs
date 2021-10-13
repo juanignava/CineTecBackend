@@ -21,7 +21,9 @@ namespace CineTecBackend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Actor>>> GetActors()
         {
-            return await _context.Actors.ToListAsync();
+            // Use raw SQL query to get all clients
+            return await _context.Actors.FromSqlRaw(SqlQueries.GetAllActors).ToListAsync();
+
 
         }
 

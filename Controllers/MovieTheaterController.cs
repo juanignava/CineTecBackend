@@ -21,24 +21,36 @@ namespace CineTecBackend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MovieTheater>>> GetMovieTheaters()
         {
-            return await _context.MovieTheaters.ToListAsync();
-
+            // Use raw SQL query to get all movie theaters
+            return await _context.MovieTheaters.FromSqlRaw(SqlQueries.GetAllMovieTheaters).ToListAsync();
         }
 
         // Get a movie theater by id
         [HttpGet("{name}")]
         public async Task<ActionResult<MovieTheater>> GetMovieTheater(string name)
         {
-            return await _context.MovieTheaters.FindAsync(name);
+            // Use SQL query to get an specific movie theater
+            var movieTheater = await _context.MovieTheaters.FromSqlInterpolated(@$"SELECT * 
+                                                                                FROM MOVIE_THEATER
+                                                                                WHERE Name = {name}").FirstOrDefaultAsync();
+
+            return movieTheater;
         }
 
         // Post a movie theater
         [HttpPost]
         public async Task<ActionResult> Add(MovieTheater movieTheater)
-        {
-            var itemToAdd = await _context.MovieTheaters.FindAsync(movieTheater.Name);
+        {            
+            // First look if the movie theater already exists
+            var itemToAdd = await _context.MovieTheaters.FromSqlInterpolated(@$"SELECT * 
+                                                                                FROM MOVIE_THEATER
+                                                                                WHERE Name = {movieTheater.Name}").FirstOrDefaultAsync();
+
             if (itemToAdd != null)
                 return Conflict();
+            
+            // Add the movie theater and save the changes in the database
+            movieTheater.CinemaAmount = 0;
             _context.MovieTheaters.Add(movieTheater);
             await _context.SaveChangesAsync();
             return Ok();
@@ -48,11 +60,16 @@ namespace CineTecBackend.Controllers
         [HttpPut("{name}")]
         public async Task<ActionResult> UpdateMovieTheater(string name, MovieTheater movieTheater)
         {
-            var itemToUpdate = await _context.MovieTheaters.FindAsync(name);
+            // first look if the movie theater already exists
+            var itemToUpdate = await _context.MovieTheaters.FromSqlInterpolated(@$"SELECT * 
+                                                                                FROM MOVIE_THEATER
+                                                                                WHERE Name = {name}").FirstOrDefaultAsync();
+
             if (itemToUpdate == null)
                 return NotFound();
+            
+            // update the values of the movie theater and save changes
             itemToUpdate.Location = movieTheater.Location;
-            itemToUpdate.CinemaAmount = movieTheater.CinemaAmount;
             await _context.SaveChangesAsync();
             return Ok();
         }
@@ -61,12 +78,19 @@ namespace CineTecBackend.Controllers
         [HttpDelete("{name}")]
         public async Task<ActionResult> DeleteMovieTheater(string name)
         {
-            var itemToRemove = await _context.MovieTheaters.FindAsync(name);
+
+            // first look if the item already exists
+            var itemToRemove = await _context.MovieTheaters.FromSqlInterpolated(@$"SELECT * 
+                                                                                FROM MOVIE_THEATER
+                                                                                WHERE Name = {name}").FirstOrDefaultAsync();
 
             if (itemToRemove == null)
                 return NotFound();
 
-            _context.MovieTheaters.Remove(itemToRemove);
+            // Delete the item from the database and save the changes
+            await _context.Database.ExecuteSqlInterpolatedAsync(@$"DELETE FROM MOVIE_THEATER 
+                                                                WHERE Name = {name}");
+
             await _context.SaveChangesAsync();
             return Ok();
         }

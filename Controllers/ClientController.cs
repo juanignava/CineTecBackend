@@ -22,7 +22,8 @@ namespace CineTecBackend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Client>>> GetClients()
         {
-            return await _context.Clients.ToListAsync();
+            // Use raw SQL query to get all clients
+            return await _context.Clients.FromSqlRaw(SqlQueries.GetAllClients).ToListAsync();
 
         }
 
@@ -30,17 +31,26 @@ namespace CineTecBackend.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Client>> GetClient(int id)
         {
-            return await _context.Clients.FindAsync(id);
+            // Use SQL query to get an specific client
+            var client = await _context.Clients.FromSqlInterpolated(@$"SELECT * 
+                                                                        FROM CLIENT
+                                                                        WHERE Id = {id}").FirstOrDefaultAsync();
 
+            return client;
         }
 
         // Post a client
         [HttpPost]
         public async Task<ActionResult> Add(Client client)
         {
-            var itemToAdd = await _context.Clients.FindAsync(client.Id);
+            // First look if the client already exists
+            var itemToAdd = await _context.Clients.FromSqlInterpolated(@$"SELECT * 
+                                                                        FROM CLIENT
+                                                                        WHERE Id = {client.Id}").FirstOrDefaultAsync();
             if (itemToAdd != null)
                 return Conflict();
+
+            // Then add the client to the database
             _context.Clients.Add(client);
             await _context.SaveChangesAsync();
             return Ok();
@@ -50,15 +60,22 @@ namespace CineTecBackend.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateClient(int id, Client client)
         {
-            var itemToUpdate = await _context.Clients.FindAsync(id);
+            // Look if the client already exists
+            var itemToUpdate = await _context.Clients.FromSqlInterpolated(@$"SELECT * 
+                                                                        FROM CLIENT
+                                                                        WHERE Id = {id}").FirstOrDefaultAsync();
+
             if (itemToUpdate == null)
                 return NotFound();
+
+            // Define it's new values
             itemToUpdate.FirstName = client.FirstName;
             itemToUpdate.LastName = client.LastName;
             itemToUpdate.SecLastName = client.SecLastName;
             itemToUpdate.Age = client.Age;
             itemToUpdate.PhoneNumber = client.PhoneNumber;
             itemToUpdate.Password = client.Password;
+            // save the changes in the databse
             await _context.SaveChangesAsync();
             return Ok();
         }
@@ -67,12 +84,19 @@ namespace CineTecBackend.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteClient(int id)
         {
-            var itemToRemove = await _context.Clients.FindAsync(id);
+            // First look fot the client with an sql query
+             var itemToRemove = await _context.Clients.FromSqlInterpolated(@$"SELECT * 
+                                                                        FROM CLIENT
+                                                                        WHERE Id = {id}").FirstOrDefaultAsync();
 
             if (itemToRemove == null)
                 return NotFound();
 
-            _context.Clients.Remove(itemToRemove);
+            // Delete the client using an SQL query
+            await _context.Database.ExecuteSqlInterpolatedAsync(@$"DELETE FROM CLIENT 
+                                                                WHERE Id = {id}");
+
+            // Save changes in the database
             await _context.SaveChangesAsync();
             return Ok();
         }
