@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace CineTecBackend.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ActorController : ControllerBase
     {
         private readonly cinetecContext _context;
