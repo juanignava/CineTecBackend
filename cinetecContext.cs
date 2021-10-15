@@ -22,6 +22,7 @@ namespace CineTecBackend
         public virtual DbSet<Client> Clients { get; set; }
         public virtual DbSet<Movie> Movies { get; set; }
         public virtual DbSet<MovieTheater> MovieTheaters { get; set; }
+        public virtual DbSet<Purchase> Purchases { get; set; }
         public virtual DbSet<Screening> Screenings { get; set; }
         public virtual DbSet<Seat> Seats { get; set; }
 
@@ -170,6 +171,51 @@ namespace CineTecBackend
                     .HasColumnName("location");
             });
 
+            modelBuilder.Entity<Purchase>(entity =>
+            {
+                entity.ToTable("purchase");
+
+                entity.Property(e => e.Purchaseid)
+                    .ValueGeneratedNever()
+                    .HasColumnName("purchaseid");
+
+                entity.Property(e => e.Clientid).HasColumnName("clientid");
+
+                entity.Property(e => e.Date)
+                    .HasColumnType("date")
+                    .HasColumnName("date");
+
+                entity.Property(e => e.Movieoriginalname)
+                    .HasMaxLength(20)
+                    .HasColumnName("movieoriginalname");
+
+                entity.Property(e => e.Screeningid).HasColumnName("screeningid");
+
+                entity.Property(e => e.Theatername)
+                    .HasMaxLength(20)
+                    .HasColumnName("theatername");
+
+                entity.HasOne(d => d.Client)
+                    .WithMany(p => p.Purchases)
+                    .HasForeignKey(d => d.Clientid)
+                    .HasConstraintName("purchase_client_fk");
+
+                entity.HasOne(d => d.MovieoriginalnameNavigation)
+                    .WithMany(p => p.Purchases)
+                    .HasForeignKey(d => d.Movieoriginalname)
+                    .HasConstraintName("purchase_movie_fk");
+
+                entity.HasOne(d => d.Screening)
+                    .WithMany(p => p.Purchases)
+                    .HasForeignKey(d => d.Screeningid)
+                    .HasConstraintName("purchase_screening_fk");
+
+                entity.HasOne(d => d.TheaternameNavigation)
+                    .WithMany(p => p.Purchases)
+                    .HasForeignKey(d => d.Theatername)
+                    .HasConstraintName("purchase_movie_theater_fk");
+            });
+
             modelBuilder.Entity<Screening>(entity =>
             {
                 entity.ToTable("screening");
@@ -212,9 +258,16 @@ namespace CineTecBackend
 
                 entity.Property(e => e.ColumnNum).HasColumnName("column_num");
 
+                entity.Property(e => e.PurchaseId).HasColumnName("purchase_id");
+
                 entity.Property(e => e.State)
                     .HasMaxLength(20)
                     .HasColumnName("state");
+
+                entity.HasOne(d => d.Purchase)
+                    .WithMany(p => p.Seats)
+                    .HasForeignKey(d => d.PurchaseId)
+                    .HasConstraintName("seat_purchase_fk");
 
                 entity.HasOne(d => d.Screening)
                     .WithMany(p => p.Seats)

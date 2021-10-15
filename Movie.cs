@@ -10,6 +10,7 @@ namespace CineTecBackend
         public Movie()
         {
             Actors = new HashSet<Actor>();
+            Purchases = new HashSet<Purchase>();
             Screenings = new HashSet<Screening>();
         }
 
@@ -21,6 +22,7 @@ namespace CineTecBackend
         public int? Lenght { get; set; }
 
         public virtual ICollection<Actor> Actors { get; set; }
+        public virtual ICollection<Purchase> Purchases { get; set; }
         public virtual ICollection<Screening> Screenings { get; set; }
     }
 }

@@ -12,5 +12,6 @@ namespace CineTecBackend
         public const string GetAllScreenings = "SELECT * FROM SCREENING";
         public const string GetAllMovies = "SELECT * FROM MOVIE";
         public const string GetAllActors = "SELECT * FROM ACTORS";
+        public const string GetAllPurchases = "SELECT * FROM PURCHASE";
     }
 }

@@ -9,6 +9,7 @@ namespace CineTecBackend
     {
         public Screening()
         {
+            Purchases = new HashSet<Purchase>();
             Seats = new HashSet<Seat>();
         }
 
@@ -20,6 +21,7 @@ namespace CineTecBackend
 
         public virtual Cinema CinemaNumberNavigation { get; set; }
         public virtual Movie MovieOriginalNameNavigation { get; set; }
+        public virtual ICollection<Purchase> Purchases { get; set; }
         public virtual ICollection<Seat> Seats { get; set; }
     }
 }
