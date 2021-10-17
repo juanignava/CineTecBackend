@@ -83,6 +83,9 @@ namespace CineTecBackend.Controllers
             itemToUpdate.Name = movie.Name;
             itemToUpdate.Director = movie.Director;
             itemToUpdate.Lenght = movie.Lenght;
+            itemToUpdate.ImageUrl = movie.ImageUrl;
+
+            
 
             // save the changes in the database
             await _context.SaveChangesAsync();
