@@ -21,7 +21,19 @@ namespace CineTecBackend.Controllers
         [HttpGet("{number}")]
         public async Task<IEnumerable<Seat>> GetSeats(int number)
         {
-            return await _context.Seats.Where(p => p.ScreeningId == number).ToListAsync();;
+            //return await _context.Seats.Where(p => p.ScreeningId == number).ToListAsync();;
+            return await _context.Seats.FromSqlInterpolated(@$"SELECT * FROM SEAT
+                                                            WHERE Screening_id = {number}
+                                                            ORDER BY row_num, column_num").ToListAsync();
+        }
+
+        // Get an specific seat
+        [HttpGet("{number}/{row}/{column}")]
+        public async Task<Seat> GetSpecificSeat(int number, int row, int column)
+        {
+            return await _context.Seats.FromSqlInterpolated(@$"SELECT * 
+                                                            FROM SEAT
+                                                            WHERE screening_id = {number} AND row_num = {row} AND column_num = {column}").FirstOrDefaultAsync();
         }
 
         // Post a seat
