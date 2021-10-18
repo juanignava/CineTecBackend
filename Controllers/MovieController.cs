@@ -102,6 +102,11 @@ namespace CineTecBackend.Controllers
             if (itemToRemove == null)
                 return NotFound();
 
+            // Delete the item from the database and save the changes
+            await _context.Database.ExecuteSqlInterpolatedAsync(@$"DELETE FROM ACTORS
+                                                                WHERE original_movie_name = {name}");
+
+            await _context.SaveChangesAsync();
             // remove the movie from the datbase and update
             _context.Movies.Remove(itemToRemove);
             await _context.SaveChangesAsync();
